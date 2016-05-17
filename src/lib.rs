@@ -1,11 +1,10 @@
+#![crate_type = "lib"]
+#![crate_name = "bmfont"]
+
 extern crate xml;
 
-use std::io::prelude::*;
-use std::fs::File;
-use xml::reader::{ EventReader, XmlEvent };
-
 #[derive(Debug)]
-struct BmChar {
+pub struct BmChar {
     id: i32,
     page: i32,
     x: i32,
@@ -19,7 +18,7 @@ struct BmChar {
 }
 
 impl BmChar {
-    fn new() -> Self {
+    pub fn new() -> Self {
         BmChar {
             id: 0,
             page: 0,
@@ -36,13 +35,13 @@ impl BmChar {
 }
 
 #[derive(Debug)]
-struct BmPage {
+pub struct BmPage {
     id: i32,
     file: String
 }
 
 impl BmPage {
-    fn new() -> Self {
+    pub fn new() -> Self {
         BmPage {
             id: 0,
             file: String::new()
@@ -56,16 +55,9 @@ pub struct BmFont {
     chars: Vec<BmChar>
 }
 
-fn main() {
-    let mut f = File::open("example-assets/font.fnt").unwrap();
-    let mut buffer = String::new();
-    f.read_to_string(&mut buffer).unwrap();
-
-    let res = parse(buffer);
-    println!("{:?}", res);
-}
-
 pub fn parse(xmlstr: String) -> BmFont {
+
+    use xml::reader::{ EventReader, XmlEvent };
 
     let mut chars : Vec<BmChar> = Vec::new();
     let mut pages : Vec<BmPage> = Vec::new();
@@ -129,3 +121,4 @@ pub fn parse(xmlstr: String) -> BmFont {
 
     BmFont { pages: pages, chars: chars }
 }
+
