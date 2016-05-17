@@ -1,0 +1,7 @@
+[package]
+name = "rust-bmfont"
+version = "0.1.0"
+authors = ["Jérôme Schneider / Net Gusto <contact@netgusto.com>"]
+
+[dependencies]
+xml-rs = "0.3.4"
