@@ -5,7 +5,7 @@ authors = ["Jérôme Schneider / Net Gusto <contact@netgusto.com>"]
 license = "MIT"
 description = "Bitmap font parser (.fnt)"
 repository = "https://github.com/netgusto/bmfont"
-keywords = ["bitmap font", "font", "parser"]
+keywords = ["bitmap", "font", "parser"]
 
 [lib]
 name = "bmfont"
