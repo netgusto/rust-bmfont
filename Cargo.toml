@@ -1,6 +1,6 @@
 [package]
 name = "rust-bmfont"
-version = "0.1.0"
+version = "0.1.1"
 authors = ["Jérôme Schneider / Net Gusto <contact@netgusto.com>"]
 license = "MIT"
 description = "Bitmap font parser (.fnt)"
