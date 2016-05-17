@@ -2,7 +2,6 @@ extern crate xml;
 
 use std::io::prelude::*;
 use std::fs::File;
-use std::io::BufReader;
 use xml::reader::{ EventReader, XmlEvent };
 
 #[derive(Debug)]
@@ -58,7 +57,7 @@ pub struct BmFont {
 }
 
 fn main() {
-    let mut f = File::open("file.xml").unwrap();
+    let mut f = File::open("example-assets/font.fnt").unwrap();
     let mut buffer = String::new();
     f.read_to_string(&mut buffer).unwrap();
 
