@@ -3,18 +3,22 @@
 
 extern crate xml;
 
+use std::collections::HashMap;
+use std::fs;
+use std::path::{ Path, PathBuf };
+
 #[derive(Debug)]
 pub struct BmChar {
-    id: i32,
-    page: i32,
-    x: i32,
-    y: i32,
-    xoffset: i32,
-    yoffset: i32,
-    width:i32,
-    height: i32,
-    xadvance: i32,
-    chnl: i32
+    pub id: u32,
+    pub page: u32,
+    pub x: i32,
+    pub y: i32,
+    pub xoffset: i32,
+    pub yoffset: i32,
+    pub width:i32,
+    pub height: i32,
+    pub xadvance: i32,
+    pub chnl: i32
 }
 
 impl BmChar {
@@ -37,29 +41,51 @@ impl BmChar {
 #[derive(Debug)]
 pub struct BmPage {
     id: i32,
-    file: String
+    pub file: PathBuf
 }
 
 impl BmPage {
     pub fn new() -> Self {
         BmPage {
             id: 0,
-            file: String::new()
+            file: PathBuf::new()
         }
     }
 }
 
 #[derive(Debug)]
 pub struct BmFont {
-    pages: Vec<BmPage>,
-    chars: Vec<BmChar>
+    pub pages: Vec<BmPage>,
+    pub chars: HashMap<u32, BmChar>
 }
 
-pub fn parse(xmlstr: String) -> BmFont {
+impl BmFont {
+    pub fn get_pages(&self) -> &Vec<BmPage> {
+        &self.pages
+    }
+}
 
+pub fn parse(fontdescriptorpath: PathBuf) -> BmFont {
+
+    use std::io::prelude::*;
+    use std::fs::File;
     use xml::reader::{ EventReader, XmlEvent };
 
-    let mut chars : Vec<BmChar> = Vec::new();
+    // let fontdescriptordir: &Path;
+
+    // match fontdescriptorpath.parent() {
+    //     Some(p) => fontdescriptordir = p,
+    //     _ => panic!("BmFont: Cannot determine font descriptor directory: {:?}", fontdescriptorpath)
+    // }
+
+    // println!("ROOT DIR: {:?}", fontdescriptordir);
+
+    let mut f = File::open(&fontdescriptorpath).unwrap();
+
+    let mut xmlstr = String::new();
+    f.read_to_string(&mut xmlstr).unwrap();
+
+    let mut chars : HashMap<u32, BmChar> = HashMap::new();
     let mut pages : Vec<BmPage> = Vec::new();
 
     let parser = EventReader::new(xmlstr.as_bytes());
@@ -78,8 +104,8 @@ pub fn parse(xmlstr: String) -> BmFont {
                             let value = attr.value;
 
                             match &name.as_ref() {
-                                &"id" => chr.id = value.parse::<i32>().unwrap(),
-                                &"page" => chr.page = value.parse::<i32>().unwrap(),
+                                &"id" => chr.id = value.parse::<u32>().unwrap(),
+                                &"page" => chr.page = value.parse::<u32>().unwrap(),
                                 &"x" => chr.x = value.parse::<i32>().unwrap(),
                                 &"y" => chr.y = value.parse::<i32>().unwrap(),
                                 &"xoffset" => chr.xoffset = value.parse::<i32>().unwrap(),
@@ -91,7 +117,8 @@ pub fn parse(xmlstr: String) -> BmFont {
                                 _ => {}
                             }
                         }
-                        chars.push(chr);
+                        //chars.push(chr);
+                        chars.insert(chr.id, chr);
                     }
                     &"page" => {
                         let mut page: BmPage = BmPage::new();
@@ -100,13 +127,17 @@ pub fn parse(xmlstr: String) -> BmFont {
                             let value = attr.value;
                             match &name.as_ref() {
                                 &"id" => page.id = value.parse::<i32>().unwrap(),
-                                &"file" => page.file = value,
+                                &"file" => {
+                                    page.file = fontdescriptorpath.with_file_name(value);
+                                },
                                 _ => {}
                             }
                         }
                         pages.push(page);
                     }
-                    _ => {}
+                    &"info" => { }
+                    &"common" => { }
+                    _ => { }
                 }
             }
 
