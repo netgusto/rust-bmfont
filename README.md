@@ -1,5 +1,8 @@
 # rust-bmfont
-Bitmap font parser for rustlang
+
+Bitmap font parser for rustlang. Currently supports:
+
+* `.fnt` (xml flavour); example generator: <http://kvazars.com/littera/>
 
 ## Usage
 
@@ -20,6 +23,14 @@ fn main() {
     let res = bmparse(fontdescriptorpath);
     println!("{:?}", res);
 }
+```
+
+## Examples
+
+### Parse example
+
+```bash
+$ cargo run --example parse
 ```
 
 ## Sample renderer
