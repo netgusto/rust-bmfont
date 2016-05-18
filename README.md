@@ -8,14 +8,17 @@ Returns a structure containing the informations contained in a `.fnt` (xml forma
 ```rust
 extern crate bmfont;
 
-use bmfont::{ BmFont, parse as bmparse };
+use bmfont::{ parse as bmparse };
+use std::path::{ PathBuf, Path };
+use std::env;
 
-fn parsefont() -> BmFont {
+fn main() {
     let cwd: PathBuf = env::current_dir().unwrap();
-    let assetspath: PathBuf = PathBuf::from(cwd).join(Path::new("assets/font"));
-    let fontdescriptorpath: PathBuf = assetspath.join(Path::new("20px.fnt"));
+    let assetspath: PathBuf = PathBuf::from(cwd).join(Path::new("examples/assets"));
+    let fontdescriptorpath: PathBuf = assetspath.join(Path::new("font.fnt"));
 
-    bmparse(fontdescriptorpath)
+    let res = bmparse(fontdescriptorpath);
+    println!("{:?}", res);
 }
 ```
 
