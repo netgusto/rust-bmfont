@@ -6,7 +6,7 @@ extern crate xml;
 use std::collections::HashMap;
 use std::path::{ PathBuf };
 
-#[derive(Debug)]
+#[derive(Debug, Default)]
 pub struct BmChar {
     pub id: u32,
     pub page: u32,
@@ -37,7 +37,7 @@ impl BmChar {
     }
 }
 
-#[derive(Debug)]
+#[derive(Debug, Default)]
 pub struct BmPage {
     id: i32,
     pub file: PathBuf
