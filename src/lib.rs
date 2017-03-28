@@ -6,7 +6,7 @@ extern crate xml;
 use std::collections::HashMap;
 use std::path::{ PathBuf };
 
-#[derive(Debug)]
+#[derive(Debug, Default)]
 pub struct BmChar {
     pub id: u32,
     pub page: u32,
@@ -37,7 +37,7 @@ impl BmChar {
     }
 }
 
-#[derive(Debug)]
+#[derive(Debug, Default)]
 pub struct BmPage {
     id: i32,
     pub file: PathBuf
@@ -94,39 +94,39 @@ pub fn parse(fontdescriptorpath: PathBuf) -> BmFont {
         match e {
             Ok(XmlEvent::StartElement { name, attributes, .. }) => {
 
-                match &name.local_name.as_ref() {
-                    &"char" => {
+                match name.local_name.as_ref() {
+                    "char" => {
                         let mut chr: BmChar = BmChar::new();
 
                         for attr in attributes {
                             let name = attr.name.local_name;
                             let value = attr.value;
 
-                            match &name.as_ref() {
-                                &"id" => chr.id = value.parse::<u32>().unwrap(),
-                                &"page" => chr.page = value.parse::<u32>().unwrap(),
-                                &"x" => chr.x = value.parse::<i32>().unwrap(),
-                                &"y" => chr.y = value.parse::<i32>().unwrap(),
-                                &"xoffset" => chr.xoffset = value.parse::<i32>().unwrap(),
-                                &"yoffset" => chr.yoffset = value.parse::<i32>().unwrap(),
-                                &"width" => chr.width = value.parse::<i32>().unwrap(),
-                                &"height" => chr.height = value.parse::<i32>().unwrap(),
-                                &"xadvance" => chr.xadvance = value.parse::<i32>().unwrap(),
-                                &"chnl" => chr.chnl = value.parse::<i32>().unwrap(),
+                            match name.as_ref() {
+                                "id" => chr.id = value.parse::<u32>().unwrap(),
+                                "page" => chr.page = value.parse::<u32>().unwrap(),
+                                "x" => chr.x = value.parse::<i32>().unwrap(),
+                                "y" => chr.y = value.parse::<i32>().unwrap(),
+                                "xoffset" => chr.xoffset = value.parse::<i32>().unwrap(),
+                                "yoffset" => chr.yoffset = value.parse::<i32>().unwrap(),
+                                "width" => chr.width = value.parse::<i32>().unwrap(),
+                                "height" => chr.height = value.parse::<i32>().unwrap(),
+                                "xadvance" => chr.xadvance = value.parse::<i32>().unwrap(),
+                                "chnl" => chr.chnl = value.parse::<i32>().unwrap(),
                                 _ => {}
                             }
                         }
                         //chars.push(chr);
                         chars.insert(chr.id, chr);
                     }
-                    &"page" => {
+                    "page" => {
                         let mut page: BmPage = BmPage::new();
                         for attr in attributes {
                             let name = attr.name.local_name;
                             let value = attr.value;
-                            match &name.as_ref() {
-                                &"id" => page.id = value.parse::<i32>().unwrap(),
-                                &"file" => {
+                            match name.as_ref() {
+                                "id" => page.id = value.parse::<i32>().unwrap(),
+                                "file" => {
                                     page.file = fontdescriptorpath.with_file_name(value);
                                 },
                                 _ => {}
@@ -134,9 +134,7 @@ pub fn parse(fontdescriptorpath: PathBuf) -> BmFont {
                         }
                         pages.push(page);
                     }
-                    &"info" => { }
-                    &"common" => { }
-                    _ => { }
+                    "info" | "common" | _ => { }
                 }
             }
 
